@@ -11,15 +11,26 @@ const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 let drawing = false;
 
-// White background for OCR
 ctx.fillStyle = "white";
 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-canvas.addEventListener("mousedown", () => drawing = true);
+canvas.addEventListener("mousedown", (e) => {
+  drawing = true;
+  ctx.beginPath();
+  ctx.moveTo(e.offsetX, e.offsetY);
+});
+
 canvas.addEventListener("mouseup", () => drawing = false);
 canvas.addEventListener("mousemove", draw);
 
-canvas.addEventListener("touchstart", () => drawing = true);
+canvas.addEventListener("touchstart", (e) => {
+  drawing = true;
+  const touch = e.touches[0];
+  const rect = canvas.getBoundingClientRect();
+  ctx.beginPath();
+  ctx.moveTo(touch.clientX - rect.left, touch.clientY - rect.top);
+});
+
 canvas.addEventListener("touchend", () => drawing = false);
 canvas.addEventListener("touchmove", drawTouch);
 
