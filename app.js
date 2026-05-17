@@ -51,7 +51,25 @@ document.getElementById("clearBtn").addEventListener("click", () => {
   document.getElementById("result").textContent = "Result will appear here";
 });
 
-document.getElementById("calcBtn").addEventListener("click", () => {
-  const result = goEvaluate("3+4");
-  document.getElementById("result").textContent = result;
+document.getElementById("calcBtn").addEventListener("click", async () => {
+  const result = document.getElementById("result");
+  result.textContent = "Reading...";
+
+  const worker = await Tesseract.createWorker("eng");
+  await worker.setParameters({
+    tessedit_char_whitelist: "0123456789+-*/.()",
+  });
+
+  const { data: { text } } = await worker.recognize(canvas);
+  await worker.terminate();
+
+  const expr = text.trim().replace(/\s/g, "");
+  result.textContent = "Saw: " + expr;
+
+  if (expr) {
+    const answer = goEvaluate(expr);
+    result.textContent = expr + " = " + answer;
+  } else {
+    result.textContent = "Could not read expression";
+  }
 });
