@@ -11,6 +11,10 @@ const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 let drawing = false;
 
+// White background for OCR
+ctx.fillStyle = "white";
+ctx.fillRect(0, 0, canvas.width, canvas.height);
+
 canvas.addEventListener("mousedown", () => drawing = true);
 canvas.addEventListener("mouseup", () => drawing = false);
 canvas.addEventListener("mousemove", draw);
@@ -21,9 +25,9 @@ canvas.addEventListener("touchmove", drawTouch);
 
 function draw(e) {
   if (!drawing) return;
-  ctx.lineWidth = 4;
+  ctx.lineWidth = 6;
   ctx.lineCap = "round";
-  ctx.strokeStyle = "white";
+  ctx.strokeStyle = "black";
   ctx.lineTo(e.offsetX, e.offsetY);
   ctx.stroke();
   ctx.beginPath();
@@ -36,9 +40,9 @@ function drawTouch(e) {
   const rect = canvas.getBoundingClientRect();
   const x = touch.clientX - rect.left;
   const y = touch.clientY - rect.top;
-  ctx.lineWidth = 4;
+  ctx.lineWidth = 6;
   ctx.lineCap = "round";
-  ctx.strokeStyle = "white";
+  ctx.strokeStyle = "black";
   ctx.lineTo(x, y);
   ctx.stroke();
   ctx.beginPath();
@@ -46,7 +50,8 @@ function drawTouch(e) {
 }
 
 document.getElementById("clearBtn").addEventListener("click", () => {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "white";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.beginPath();
   document.getElementById("result").textContent = "Result will appear here";
 });
